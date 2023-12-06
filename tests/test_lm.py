@@ -21,13 +21,38 @@ class TestIsCompatible(unittest.TestCase):
 
 class TestGetCompatibility(unittest.TestCase):
 
-    def test_mit_gpl2(self):
+    def test_mit_gpl(self):
         self.assertEqual(elmat.get_compatibility('MIT','GPL-2.0-or-later'), osadl_matrix.OSADLCompatibility.NO)
         self.assertEqual(elmat.get_compatibility('GPL-2.0-or-later', 'MIT'), osadl_matrix.OSADLCompatibility.YES)
+        self.assertEqual(elmat.get_compatibility('MIT','GPL-3.0-or-later'), osadl_matrix.OSADLCompatibility.NO)
+        self.assertEqual(elmat.get_compatibility('GPL-3.0-or-later', 'MIT'), osadl_matrix.OSADLCompatibility.YES)
+        self.assertEqual(elmat.get_compatibility('MIT','AGPL-3.0-or-later'), osadl_matrix.OSADLCompatibility.NO)
+        self.assertEqual(elmat.get_compatibility('AGPL-3.0-or-later', 'MIT'), osadl_matrix.OSADLCompatibility.YES)
+
+    def test_mit_lgpl(self):
+        # The below might seem confusing (anyone can link to LGPL) but
+        # the use case for OSADL's matrix is source code "mix"
+        self.assertEqual(elmat.get_compatibility('MIT','LGPL-2.1-or-later'), osadl_matrix.OSADLCompatibility.NO)
+        self.assertEqual(elmat.get_compatibility('LGPL-2.1-or-later', 'MIT'), osadl_matrix.OSADLCompatibility.YES)
 
     def test_mit_prop(self):
         self.assertEqual(elmat.get_compatibility('MIT','Proprietary-linked'), osadl_matrix.OSADLCompatibility.UNDEF)
         self.assertEqual(elmat.get_compatibility('Proprietary-linked', 'MIT'), osadl_matrix.OSADLCompatibility.YES)
+
+    def test_gpl_prop(self):
+        self.assertEqual(elmat.get_compatibility('GPL-2.0-or-later','Proprietary-linked'), osadl_matrix.OSADLCompatibility.UNDEF)
+        self.assertEqual(elmat.get_compatibility('Proprietary-linked', 'GPL-2.0-or-later'), osadl_matrix.OSADLCompatibility.NO)
+
+        self.assertEqual(elmat.get_compatibility('GPL-3.0-or-later','Proprietary-linked'), osadl_matrix.OSADLCompatibility.UNDEF)
+        import sys
+        print(" p->g3: " + str(elmat.get_compatibility('Proprietary-linked', 'GPL-2.0-or-later')), file=sys.stderr)
+        print(" p->g3: " + str(elmat.get_compatibility('Proprietary-linked', 'GPL-3.0-or-later')), file=sys.stderr)
+        print(" p->g3: " + str(elmat.get_compatibility('Proprietary-linked', 'AGPL-3.0-or-later')), file=sys.stderr)
+        print(" p->g3: " + str(elmat.get_compatibility('Proprietary-linked', 'LGPL-3.0-or-later')), file=sys.stderr)
+        self.assertEqual(elmat.get_compatibility('Proprietary-linked', 'GPL-3.0-or-later'), osadl_matrix.OSADLCompatibility.NO)
+
+        self.assertEqual(elmat.get_compatibility('AGPL-3.0-or-later','Proprietary-linked'), osadl_matrix.OSADLCompatibility.UNDEF)
+        self.assertEqual(elmat.get_compatibility('Proprietary-linked', 'AGPL-3.0-or-later'), osadl_matrix.OSADLCompatibility.NO)
 
 class TestSupportedLicenses(unittest.TestCase):
     
