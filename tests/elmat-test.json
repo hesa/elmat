@@ -1,0 +1,14 @@
+{
+    "extended_licenses": {
+	"Mumbo": {
+            "0BSD": "No",
+            "AFL-2.0": "No",
+            "AFL-2.1": "No",
+            "AFL-3.0": "No",
+            "AGPL-3.0-only": "Yes",
+            "AGPL-3.0-or-later": "Yes",
+            "ZPL-2.0": "No",
+            "Proprietary-linked": "Yes"
+	}
+    }
+}
