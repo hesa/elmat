@@ -11,7 +11,6 @@ def __init():
     if not __elmat:
         __elmat = Elmat()
 
-
 def is_compatible(outbound, inbound, customdb=None):
     __init()
     return __elmat.is_compatible(outbound, inbound)
