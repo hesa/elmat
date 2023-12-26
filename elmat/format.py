@@ -6,17 +6,17 @@ import json
 import yaml
 
 class Formatter():
-    
+
     def format_matrix(self, matrix):
         return None
 
     @staticmethod
-    def formatter(format):
-        if format.lower() == "json":
+    def formatter(_format):
+        if _format.lower() == "json":
             return JsonFormatter()
-        elif format.lower() == "yaml":
+        elif _format.lower() == "yaml":
             return YamlFormatter()
-        elif format.lower() == "csv":
+        elif _format.lower() == "csv":
             return CsvFormatter()
 
 class JsonFormatter(Formatter):
@@ -28,14 +28,14 @@ class CsvFormatter(Formatter):
 
     def __format_row_item(self, item):
         return f'"{item}"'
-    
+
     def format_matrix(self, matrix):
         rows = []
         keys = list(matrix.keys())
         keys.remove('timeformat')
         keys.remove('timestamp')
         rows.append(f'"Compatiblity*", {", ".join([self.__format_row_item(x) for x in keys])}')
-            
+
         for key in keys:
             row = []
             row.append(f'{key}')
