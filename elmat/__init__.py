@@ -11,8 +11,6 @@ import json
 import logging
 import os
 
-import elmat.config
-
 TOP_DIR = os.path.dirname(os.path.realpath(__file__))
 VAR_DIR = os.path.join(TOP_DIR, 'var')
 LICENSES_FILE = os.path.join(VAR_DIR, "elmat.json")
