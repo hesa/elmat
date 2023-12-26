@@ -3,7 +3,7 @@ Upstream-Name: elmat - Extended License Matrix
 Upstream-Contact: Henrik Sandklef <hesa@sandklef.com>
 Source: https://github.com/hesa/elmat
 
-Files: var/*.json
+Files: elmat/var/*.json
 Copyright: 2023 Henrik Sandklef <hesa@sandklef.com>
 License: CC-BY-4.0
 
