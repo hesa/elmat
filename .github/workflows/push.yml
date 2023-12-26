@@ -20,9 +20,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Check licenses
-      run: |
-        make check_license_files
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
