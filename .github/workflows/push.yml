@@ -44,7 +44,7 @@ jobs:
       run: python3 setup.py install
     - name: Test
       run: |
-        JUNIT_REPORT=1 python3 -m pytest
+        python3 -m pytest tests
     - name: CLI check
       run: |
         elmat --help
