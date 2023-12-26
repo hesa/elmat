@@ -31,7 +31,7 @@ jobs:
         reuse --suppress-deprecation lint
     - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip
+        #python3 -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
     - name: Build
@@ -45,7 +45,6 @@ jobs:
     - name: Test
       run: |
         JUNIT_REPORT=1 python3 -m pytest
-        make 
     - name: CLI check
       run: |
         elmat --help
