@@ -26,6 +26,7 @@ check-py-cli:
 build:
 	rm -fr build
 	python3 setup.py sdist
+	if [ `tar ztvf dist/*.tar.gz | grep var | wc -l` -eq 0 ] ; then echo "Check for var dir in the tar.gz failed...."; exit 3; fi
 	@echo
 	@echo "build ready :)"
 
@@ -40,7 +41,7 @@ clean:
 	find . -name "*.pyc" | xargs rm -fr
 	find . -name ".#*" | xargs rm -fr
 	rm -f .coverage
-	rm -fr python/elmat.egg-info
-	rm -fr python/*elmat.egg*
-	rm -fr python/dist
-	rm -fr python/build
+	rm -fr elmat.egg-info
+	rm -fr *elmat.egg*
+	rm -fr dist
+	rm -fr build
