@@ -7,6 +7,8 @@
 from argparse import RawTextHelpFormatter
 import argparse
 import logging
+import sys
+
 from elmat import Elmat
 from elmat.format import Formatter
 
@@ -17,6 +19,7 @@ def get_parser():
         epilog="",
         formatter_class=RawTextHelpFormatter,
     )
+    parser.set_defaults(func=None)
 
     parser.add_argument('-of', '--output-format',
                         type=str,
@@ -35,15 +38,28 @@ def get_parser():
 
     subparsers = parser.add_subparsers(help='Sub commands')
 
+    # list
+    parser_l = subparsers.add_parser(
+        'list', help='List licenses')
+    parser_l.set_defaults(which='list', func=list_licenses)
+
     # merge
     parser_m = subparsers.add_parser(
         'merge', help='Merge license with other')
     parser_m.set_defaults(which='merge', func=merge_licenses)
-    parser_m.add_argument('--license-files', type=str, nargs='+', help='license files to merge')
     parser_m.add_argument('--exclude-osadl', action='store_true', dest='exclude_osadl', help='', default=False)
+
     parser_m.add_argument('--exclude-elmat', action='store_true', dest='exclude_elmat', help='', default=False)
 
+    parser_m.add_argument('--license-files', type=str, nargs='+', help='license files to merge')
+
     return parser
+
+def list_licenses(args, formatter):
+    elmat = Elmat()
+    matrix = elmat.supported_licenses()
+    formatted = formatter.format_licenses(matrix)
+    return formatted
 
 def merge_licenses(args, formatter):
 
@@ -58,7 +74,8 @@ def merge_licenses(args, formatter):
 
 def main():
 
-    args = get_parser().parse_args()
+    parser = get_parser()
+    args = parser.parse_args()
     formatter = Formatter.formatter(args.output_format)
 
     if args.debug:
@@ -73,6 +90,8 @@ def main():
             if args.verbose:
                 import traceback
                 print(traceback.format_exc())
+    else:
+        parser.print_help(sys.stderr)
 
 
 if __name__ == '__main__':

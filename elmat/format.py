@@ -10,19 +10,27 @@ class Formatter():
     def format_matrix(self, matrix):
         return None
 
+    def format_licenses(self, license_list):
+        return None
+
     @staticmethod
     def formatter(_format):
         if _format.lower() == "json":
             return JsonFormatter()
-        elif _format.lower() == "yaml":
+        elif _format.lower() == "yaml" or _format.lower() == "yml":
             return YamlFormatter()
         elif _format.lower() == "csv":
             return CsvFormatter()
+        elif _format.lower() == "text" or _format.lower() == "txt":
+            return TxtFormatter()
 
 class JsonFormatter(Formatter):
 
     def format_matrix(self, matrix):
         return json.dumps(matrix, indent=4)
+
+    def format_licenses(self, license_list):
+        return json.dumps(list(license_list), indent=4)
 
 class CsvFormatter(Formatter):
 
@@ -44,7 +52,21 @@ class CsvFormatter(Formatter):
             rows.append(', '.join(row))
         return '\n'.join(rows)
 
+    def format_licenses(self, license_list):
+        return {",".join(license_list)}
+
+class TxtFormatter(Formatter):
+
+    def format_matrix(self, matrix):
+        return CsvFormatter().format_matrix(matrix)
+
+    def format_licenses(self, license_list):
+        return '\n'.join(license_list)
+
 class YamlFormatter(Formatter):
 
     def format_matrix(self, matrix):
         return yaml.safe_dump(matrix)
+
+    def format_licenses(self, license_list):
+        return yaml.safe_dump(list(license_list))
