@@ -64,6 +64,8 @@ class Elmat:
         # Include OSADL's licenses if requested
         if include_osadl:
             licenses += self.osadl_licenses()
+            licenses.remove("timeformat")
+            licenses.remove("timestamp")
         # Include Elmat's licenses if requested
         if include_elmat:
             licenses += self.elmat_licenses()
@@ -89,10 +91,9 @@ class Elmat:
         for outer_lic in license_matrix.keys():
             for inner_lic in license_matrix.keys():
                 if inner_lic not in license_matrix[outer_lic]:
-                    if inner_lic == outer_lic:
-                        license_matrix[outer_lic][inner_lic] = 'Same'
-                    else:
-                        license_matrix[outer_lic][inner_lic] = 'Unknown'
+                    license_matrix[outer_lic][inner_lic] = 'Unknown'
+                elif inner_lic == outer_lic:
+                    license_matrix[outer_lic][inner_lic] = 'Yes'
 
         return license_matrix
 
