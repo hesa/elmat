@@ -108,7 +108,6 @@ jobs:
       with:
         files: ${{ env.VERSION_FILE }} .bumpversion.cfg
         message: 'Release ${{ steps.version-bump.outputs.new_version }}'
-        token: ${{ secrets.TOKEN }}
 
     - name: Create new release
       if: steps.release-needed.outputs.DO_RELEASE == 'true'
