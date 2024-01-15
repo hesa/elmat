@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Henrik Sandklef
+# SPDX-FileCopyrightText: 2024 Henrik Sandklef
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,14 +11,14 @@ def __init():
     if not __elmat:
         __elmat = Elmat()
 
-def is_compatible(outbound, inbound, customdb=None):
+def is_compatible(outbound, inbound):
     __init()
     return __elmat.is_compatible(outbound, inbound)
 
-def get_compatibility(outbound, inbound, customdb=None):
+def get_compatibility(outbound, inbound):
     __init()
     return __elmat.get_compatibility(outbound, inbound)
 
-def supported_licenses(customdb=None):
+def supported_licenses():
     __init()
     return __elmat.supported_licenses()

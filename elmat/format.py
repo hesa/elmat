@@ -13,6 +13,21 @@ class Formatter():
     def format_licenses(self, license_list):
         return None
 
+    def format_verification(self, verification):
+        return None
+
+    def format_exception(self, exception):
+        return None
+
+    def format_compatiblity(self, compatibility):
+        return None
+
+    def _exception_to_dict(self, exception):
+        return {
+            'message': exception.error_message(),
+            'code': exception.error_code(),
+        }
+
     @staticmethod
     def formatter(_format):
         if _format.lower() == "json":
@@ -31,6 +46,15 @@ class JsonFormatter(Formatter):
 
     def format_licenses(self, license_list):
         return json.dumps(list(license_list), indent=4)
+
+    def format_verification(self, verification):
+        return json.dumps(verification)
+
+    def format_exception(self, exception):
+        return json.dumps(self._exception_to_dict(exception))
+
+    def format_compatiblity(self, compatibility):
+        return json.dumps(compatibility)
 
 class CsvFormatter(Formatter):
 
@@ -55,6 +79,15 @@ class CsvFormatter(Formatter):
     def format_licenses(self, license_list):
         return {",".join(license_list)}
 
+    def format_verification(self, verification):
+        return f'{verification}'
+
+    def format_exception(self, exception):
+        return exception.error_message()
+
+    def format_compatiblity(self, compatibility):
+        return compatibility
+
 class TxtFormatter(Formatter):
 
     def format_matrix(self, matrix):
@@ -63,6 +96,15 @@ class TxtFormatter(Formatter):
     def format_licenses(self, license_list):
         return '\n'.join(license_list)
 
+    def format_verification(self, verification):
+        return f'{verification}'
+
+    def format_exception(self, exception):
+        return exception.error_message()
+
+    def format_compatiblity(self, compatibility):
+        return compatibility
+
 class YamlFormatter(Formatter):
 
     def format_matrix(self, matrix):
@@ -70,3 +112,12 @@ class YamlFormatter(Formatter):
 
     def format_licenses(self, license_list):
         return yaml.safe_dump(list(license_list))
+
+    def format_verification(self, verification):
+        return yaml.safe_dump(verification)
+
+    def format_exception(self, exception):
+        return yaml.safe_dump(self._exception_to_dict(exception))
+
+    def format_compatiblity(self, compatibility):
+        return yaml.safe_dump(compatibility)

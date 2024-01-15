@@ -8,8 +8,11 @@ from argparse import RawTextHelpFormatter
 import argparse
 import logging
 import sys
+import traceback
 
 from elmat import Elmat
+from elmat import ElmatException
+from elmat import ElmatReturnCodes
 from elmat.format import Formatter
 
 def get_parser():
@@ -25,6 +28,12 @@ def get_parser():
                         type=str,
                         help='Format for outoput',
                         default="JSON")
+
+    parser.add_argument('--exclude-osadl', '-eo', action='store_true', dest='exclude_osadl', help='Exclude the licenses as found in the OSADL license matrix.', default=False)
+
+    parser.add_argument('--exclude-elmat', '-ee', action='store_true', dest='exclude_elmat', help='Exclude the licenses as found in the Elmat license file.', default=False)
+
+    parser.add_argument('--license-file', '-lf', dest='license_files', type=str, nargs='+', help='license files to merge')
 
     parser.add_argument('-v', '--verbose',
                         action='store_true',
@@ -45,30 +54,71 @@ def get_parser():
 
     # merge
     parser_m = subparsers.add_parser(
-        'merge', help='Merge license with other')
+        'merge', help='Merge license and output result')
     parser_m.set_defaults(which='merge', func=merge_licenses)
-    parser_m.add_argument('--exclude-osadl', action='store_true', dest='exclude_osadl', help='', default=False)
 
-    parser_m.add_argument('--exclude-elmat', action='store_true', dest='exclude_elmat', help='', default=False)
+    # verify
+    parser_v = subparsers.add_parser(
+        'verify', help='Verify if inbound license and an outbound license are compatible (true/false)')
+    parser_v.set_defaults(which='merge', func=verify)
+    parser_v.add_argument('--inbound-license', '-il', type=str, dest='inbound_license', help='', default=False)
+    parser_v.add_argument('--outbound-license', '-ol', type=str, dest='outbound_license', help='', default=False)
 
-    parser_m.add_argument('--license-files', type=str, nargs='+', help='license files to merge')
+    # compatibility
+    parser_c = subparsers.add_parser(
+        'compatibility', help='Get the compatiblity status between an inbound license and an outbound license')
+    parser_c.set_defaults(which='compatiblity', func=compatibility)
+    parser_c.add_argument('--inbound-license', '-il', type=str, dest='inbound_license', help='', default=False)
+    parser_c.add_argument('--outbound-license', '-ol', type=str, dest='outbound_license', help='', default=False)
 
     return parser
 
+def __get_elmat(args):
+    include_osadl = not args.exclude_osadl
+    include_elmat = not args.exclude_elmat
+    license_files = args.license_files
+
+    elmat = Elmat(license_files, include_osadl, include_elmat)
+    return elmat
+
+def compatibility(args, formatter):
+    elmat = __get_elmat(args)
+
+    inbound = args.inbound_license
+    outbound = args.outbound_license
+    if outbound not in elmat.supported_licenses():
+        raise ElmatException(ElmatReturnCodes.ELMAT_LICENSE_UNKNOWN, f'Outbound license "{outbound}" not supported.')
+    if inbound not in elmat.supported_licenses():
+        raise ElmatException(ElmatReturnCodes.ELMAT_LICENSE_UNKNOWN, f'Inbound license "{inbound}" not supported.')
+
+    ret = elmat.get_compatibility(outbound, inbound)
+    formatted = formatter.format_compatiblity(ret)
+    return formatted
+
+def verify(args, formatter):
+    elmat = __get_elmat(args)
+
+    inbound = args.inbound_license
+    outbound = args.outbound_license
+    if outbound not in elmat.supported_licenses():
+        raise ElmatException(ElmatReturnCodes.ELMAT_LICENSE_UNKNOWN, f'Outbound license "{outbound}" not supported.')
+    if inbound not in elmat.supported_licenses():
+        raise ElmatException(ElmatReturnCodes.ELMAT_LICENSE_UNKNOWN, f'Inbound license "{inbound}" not supported.')
+
+    ret = elmat.is_compatible(outbound, inbound)
+    formatted = formatter.format_verification(ret)
+    return formatted
+
+
 def list_licenses(args, formatter):
-    elmat = Elmat()
+    elmat = __get_elmat(args)
     matrix = elmat.supported_licenses()
     formatted = formatter.format_licenses(matrix)
     return formatted
 
 def merge_licenses(args, formatter):
-
-    include_osadl = not args.exclude_osadl
-    include_elmat = not args.exclude_elmat
-    license_files = args.license_files
-
-    elmat = Elmat()
-    matrix = elmat.merge_licenses(license_files, include_osadl, include_elmat)
+    elmat = __get_elmat(args)
+    matrix = elmat.matrix()
     formatted = formatter.format_matrix(matrix)
     return formatted
 
@@ -85,10 +135,12 @@ def main():
         try:
             ret = args.func(args, formatter)
             print(ret)
+        except ElmatException as e:
+            print(formatter.format_exception(e))
+            sys.exit(e.error_code())
         except Exception as e:
             logging.debug(f'exception caught: {e}')
             if args.verbose:
-                import traceback
                 print(traceback.format_exc())
     else:
         parser.print_help(sys.stderr)
