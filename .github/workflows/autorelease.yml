@@ -106,6 +106,7 @@ jobs:
       if: steps.release-needed.outputs.DO_RELEASE == 'true'
       uses: actions-x/commit@v6
       with:
+        token: ${{ secrets.ELMAT_TOKEN }}
         files: ${{ env.VERSION_FILE }} .bumpversion.cfg
         message: 'Release ${{ steps.version-bump.outputs.new_version }}'
 
