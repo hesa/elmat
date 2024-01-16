@@ -2,4 +2,4 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-SW_VERSION = "0.1.4"
+SW_VERSION = "0.1.5"
