@@ -96,7 +96,7 @@ class Elmat:
             except FileNotFoundError as e:
                 raise ElmatException(ElmatReturnCodes.ELMAT_FILE_ERROR, f'Could not read file "{license_file}". Message: "{e}"')
 
-        # check if each outer license has all values, if not: add Unknown or Same
+        # check if each outer license has all values, if not: add Unknown or Yes
         for outer_lic in license_matrix.keys():
             for inner_lic in license_matrix.keys():
                 if inner_lic == outer_lic:
