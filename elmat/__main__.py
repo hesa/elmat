@@ -10,6 +10,7 @@ import logging
 import sys
 import traceback
 
+import elmat.config
 from elmat import Elmat
 from elmat import ElmatException
 from elmat import ElmatReturnCodes
@@ -34,6 +35,10 @@ def get_parser():
     parser.add_argument('--exclude-elmat', '-ee', action='store_true', dest='exclude_elmat', help='Exclude the licenses as found in the Elmat license file.', default=False)
 
     parser.add_argument('--license-file', '-lf', dest='license_files', type=str, nargs='+', help='license files to merge')
+
+    parser.add_argument('-V', '--version',
+                        action='version',
+                        version=elmat.config.SW_VERSION)
 
     parser.add_argument('-v', '--verbose',
                         action='store_true',
