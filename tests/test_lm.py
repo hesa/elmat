@@ -23,6 +23,9 @@ class TestIsCompatible(unittest.TestCase):
         self.assertFalse(elmat_osadl.is_compatible('MIT','Proprietary-linked'))
         self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked', 'MIT'))
 
+    def test_prop_prop(self):
+        self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked','Proprietary-linked'))
+
 class TestGetCompatibility(unittest.TestCase):
 
     def test_mit_gpl(self):
