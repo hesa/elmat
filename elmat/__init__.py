@@ -47,7 +47,7 @@ class Elmat:
         return self.license_matrix.keys()
 
     def elmat_licenses(self):
-        return self.extended_licenses.keys()
+        return self.extended_licenses
 
     def osadl_licenses(self):
         return osadl_matrix.supported_licenses()
