@@ -23,8 +23,13 @@ class TestIsCompatible(unittest.TestCase):
         self.assertFalse(elmat_osadl.is_compatible('MIT','Proprietary-linked'))
         self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked', 'MIT'))
 
-    def test_prop_prop(self):
-        self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked','Proprietary-linked'))
+    def test_infozip_prop(self):
+        self.assertFalse(elmat_osadl.is_compatible('LicenseRef-scancode-info-zip-2003-05','Proprietary-linked'))
+        self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked', 'LicenseRef-scancode-info-zip-2003-05'))
+
+    def test_ppp_prop(self):
+        self.assertFalse(elmat_osadl.is_compatible('LicenseRef-scancode-ppp','Proprietary-linked'))
+        self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked', 'LicenseRef-scancode-ppp'))
 
 class TestGetCompatibility(unittest.TestCase):
 
@@ -60,6 +65,19 @@ class TestSupportedLicenses(unittest.TestCase):
     
     def test_supported_licenses(self):
         self.assertEqual(len(elmat_osadl.supported_licenses()) - len(osadl_matrix.supported_licenses()),1)
+
+    def test_nr_licenses(self):
+        osadl_licenses = osadl_matrix.supported_licenses()
+        elmat_licenses = elmat_osadl.elmat_licenses()
+        # for each license in elmat
+        for elmat_lic_key in elmat_licenses:
+            elmat_license = elmat_licenses[elmat_lic_key]
+            # and for for each license in osadl
+            for osadl_lic in osadl_licenses:
+                #print(f'Check {osadl_lic} in {elmat_license}')
+                # make sure the osadl key is present in elmat 
+                self.assertTrue(osadl_lic in elmat_license)
+            self.assertEqual(len(elmat_license), len(osadl_matrix.supported_licenses()))
 
     def test_proprietary_linked(self):
         self.assertTrue('Proprietary-linked' in elmat_osadl.supported_licenses())
