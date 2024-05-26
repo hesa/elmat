@@ -2,5 +2,5 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-osadl-matrix==2024.5.7.50556
+osadl-matrix==2024.5.22.10535
 PyYAML
