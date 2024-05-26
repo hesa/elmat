@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # SPDX-FileCopyrightText: 2023 Henrik Sandklef
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -12,23 +10,23 @@ import osadl_matrix
 class TestIsCompatible(unittest.TestCase):
 
     def test_same(self):
-        self.assertTrue(elmat_osadl.is_compatible('MIT','MIT'))
+        self.assertTrue(elmat_osadl.is_compatible('MIT', 'MIT'))
         self.assertTrue(elmat_osadl.is_compatible('GPL-2.0-or-later', 'GPL-2.0-or-later'))
 
     def test_mit_gpl2(self):
-        self.assertFalse(elmat_osadl.is_compatible('MIT','GPL-2.0-or-later'))
+        self.assertFalse(elmat_osadl.is_compatible('MIT', 'GPL-2.0-or-later'))
         self.assertTrue(elmat_osadl.is_compatible('GPL-2.0-or-later', 'MIT'))
 
     def test_mit_prop(self):
-        self.assertFalse(elmat_osadl.is_compatible('MIT','Proprietary-linked'))
+        self.assertFalse(elmat_osadl.is_compatible('MIT', 'Proprietary-linked'))
         self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked', 'MIT'))
 
     def test_infozip_prop(self):
-        self.assertFalse(elmat_osadl.is_compatible('LicenseRef-scancode-info-zip-2003-05','Proprietary-linked'))
+        self.assertFalse(elmat_osadl.is_compatible('LicenseRef-scancode-info-zip-2003-05', 'Proprietary-linked'))
         self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked', 'LicenseRef-scancode-info-zip-2003-05'))
 
     def test_ppp_prop(self):
-        self.assertFalse(elmat_osadl.is_compatible('LicenseRef-scancode-ppp','Proprietary-linked'))
+        self.assertFalse(elmat_osadl.is_compatible('LicenseRef-scancode-ppp', 'Proprietary-linked'))
         self.assertTrue(elmat_osadl.is_compatible('Proprietary-linked', 'LicenseRef-scancode-ppp'))
 
 class TestGetCompatibility(unittest.TestCase):
